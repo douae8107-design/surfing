@@ -671,3 +671,71 @@ input:valid, select:valid {
         font-size: 0.8rem;
     }
 }
+/* Styles pour la confirmation d'inscription */
+.confirmation-message {
+    margin-top: 20px;
+    padding: 15px;
+    background: #e0f7fa;
+    border-radius: 8px;
+    border-left: 4px solid #57c5b6;
+    animation: fadeIn 0.5s;
+}
+
+.confirmation-message h4 {
+    color: #159895;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.confirmation-message p {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.confirmation-message small {
+    display: block;
+    margin-top: 10px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.confirmation-message small i {
+    margin-right: 5px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bouton nouvelle inscription */
+.btn-nouvelle {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 25px;
+    background: #1a5f7a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-nouvelle:hover {
+    background: #57c5b6;
+}
+
+.btn-nouvelle i {
+    margin-right: 8px;
+}
+
+/* Amélioration des champs de formulaire */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #57c5b6;
+    box-shadow: 0 0 0 2px rgba(87, 197, 182, 0.2);
+}
