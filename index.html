@@ -114,63 +114,69 @@
         </div>
     </section>
 
-    <!-- Section Inscription -->
-    <section id="inscription" class="inscription">
-        <h2 class="section-title">Inscription en ligne</h2>
-        <div class="form-container">
-            <form id="formInscription">
-                <div class="form-group">
-                    <label for="nom">Nom complet *</label>
-                    <input type="text" id="nom" name="nom" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="tel">Téléphone *</label>
-                    <input type="tel" id="tel" name="tel" required>
-                </div>
-                <div class="form-group">
-                    <label for="niveau">Niveau de surf</label>
-                    <select id="niveau" name="niveau">
-                        <option value="debutant">Débutant</option>
-                        <option value="intermediaire">Intermédiaire</option>
-                        <option value="avance">Avancé</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="cours">Type de cours</label>
-                    <select id="cours" name="cours">
-                        <option value="debutant">Cours Débutant (350 DH)</option>
-                        <option value="pack5">Pack 5 Cours (1,500 DH)</option>
-                        <option value="prive">Cours Privé (600 DH)</option>
-                        <option value="stage">Stage Semaine (2,800 DH)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message additionnel</label>
-                    <textarea id="message" name="message" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn-submit">S'inscrire</button>
-            </form>
-            <div class="form-info">
-                <h3><i class="fas fa-info-circle"></i> Informations importantes</h3>
-                <ul>
-                    <li><i class="fas fa-check"></i> Inscription confirmée par email</li>
-                    <li><i class="fas fa-check"></i> Annulation gratuite 24h à l'avance</li>
-                    <li><i class="fas fa-check"></i> Paiement sur place en DH ou carte</li>
-                    <li><i class="fas fa-check"></i> Certificat médical requis</li>
-                </ul>
-                <div class="info-card">
-                    <h4><i class="fas fa-clock"></i> Horaires d'ouverture</h4>
-                    <p>Lundi - Vendredi: 8h - 19h</p>
-                    <p>Samedi - Dimanche: 8h - 18h</p>
-                    <p>Cours disponibles: 8h - 17h</p>
-                </div>
+  <!-- Section Inscription -->
+<section id="inscription" class="inscription">
+    <h2 class="section-title">Inscription en ligne</h2>
+    <div class="form-container">
+        <form id="formInscription">
+            <div class="form-group">
+                <label for="nom">Nom complet *</label>
+                <input type="text" id="nom" name="nom" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="tel">Téléphone *</label>
+                <input type="tel" id="tel" name="tel" required>
+            </div>
+            <div class="form-group">
+                <label for="niveau">Niveau de surf</label>
+                <select id="niveau" name="niveau">
+                    <option value="debutant">Débutant</option>
+                    <option value="intermediaire">Intermédiaire</option>
+                    <option value="avance">Avancé</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cours">Type de cours</label>
+                <select id="cours" name="cours">
+                    <option value="debutant">Cours Débutant (350 DH)</option>
+                    <option value="pack5">Pack 5 Cours (1,500 DH)</option>
+                    <option value="prive">Cours Privé (600 DH)</option>
+                    <option value="stage">Stage Semaine (2,800 DH)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Message additionnel</label>
+                <textarea id="message" name="message" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">S'inscrire</button>
+            
+            <!-- AJOUTEZ CETTE DIV POUR LA CONFIRMATION -->
+            <div id="confirmationMessage" class="confirmation-message" style="display:none; margin-top:20px; padding:15px; background:#e0f7fa; border-radius:5px; border-left:4px solid #57c5b6;">
+                <h4><i class="fas fa-check-circle"></i> Inscription réussie !</h4>
+                <p id="confirmationText"></p>
+            </div>
+        </form>
+        <div class="form-info">
+            <h3><i class="fas fa-info-circle"></i> Informations importantes</h3>
+            <ul>
+                <li><i class="fas fa-check"></i> Inscription confirmée par email</li>
+                <li><i class="fas fa-check"></i> Annulation gratuite 24h à l'avance</li>
+                <li><i class="fas fa-check"></i> Paiement sur place en DH ou carte</li>
+                <li><i class="fas fa-check"></i> Certificat médical requis</li>
+            </ul>
+            <div class="info-card">
+                <h4><i class="fas fa-clock"></i> Horaires d'ouverture</h4>
+                <p>Lundi - Vendredi: 8h - 19h</p>
+                <p>Samedi - Dimanche: 8h - 18h</p>
+                <p>Cours disponibles: 8h - 17h</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Section Rendez-vous -->
 <section id="rdv" class="rdv">
