@@ -1,13 +1,17 @@
-// Navigation mobile
+// ============================================
+// NAVIGATION MOBILE
+// ============================================
 const burger = document.querySelector('.burger');
 const nav = document.querySelector('.nav-links');
 
-burger.addEventListener('click', () => {
-    nav.classList.toggle('active');
-    burger.classList.toggle('toggle');
-});
+if (burger) {
+    burger.addEventListener('click', () => {
+        nav.classList.toggle('active');
+        burger.classList.toggle('toggle');
+    });
+}
 
-// Fermer le menu mobile quand on clique sur un lien
+// Fermer menu mobile au clic sur un lien
 document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
         nav.classList.remove('active');
@@ -15,792 +19,372 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     });
 });
 
-// Gestion des tarifs
+// ============================================
+// GESTION DES TARIFS
+// ============================================
 function choisirTarif(tarif) {
-    alert(`Vous avez choisi le tarif: ${tarif}. Vous allez être redirigé vers le formulaire d'inscription.`);
-    
+    alert(`✅ Vous avez choisi : ${tarif}\n\nVous serez redirigé vers le formulaire d'inscription.`);
     document.getElementById('inscription').scrollIntoView({ behavior: 'smooth' });
-    
-    const selectCours = document.getElementById('cours');
-    const options = Array.from(selectCours.options);
-    const optionIndex = options.findIndex(option => option.text.includes(tarif));
-    
-    if (optionIndex !== -1) {
-        selectCours.selectedIndex = optionIndex;
-    }
 }
 
-// Galerie photo
+// ============================================
+// GALERIE PHOTOS
+// ============================================
 const photos = document.querySelectorAll('.photo img');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 let currentPhotoIndex = 0;
 
 function showPhoto(index) {
-    photos.forEach((photo, i) => {
-        photo.style.opacity = i === index ? '1' : '0.5';
-        photo.style.transform = i === index ? 'scale(1.05)' : 'scale(1)';
-    });
+    if (photos.length > 0) {
+        photos.forEach((photo, i) => {
+            photo.style.opacity = i === index ? '1' : '0.5';
+            photo.style.transform = i === index ? 'scale(1.05)' : 'scale(1)';
+        });
+    }
 }
 
-prevBtn.addEventListener('click', () => {
-    currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
-    showPhoto(currentPhotoIndex);
-});
+if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', () => {
+        currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+        showPhoto(currentPhotoIndex);
+    });
 
-nextBtn.addEventListener('click', () => {
-    currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
-    showPhoto(currentPhotoIndex);
-});
+    nextBtn.addEventListener('click', () => {
+        currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+        showPhoto(currentPhotoIndex);
+    });
 
-showPhoto(0);
+    showPhoto(0);
+}
 
-// FORMULAIRE D'INSCRIPTION - CORRIGÉ (ne vide pas sans confirmation)
+// ============================================
+// FORMULAIRE D'INSCRIPTION - CORRECTION
+// ============================================
 const formInscription = document.getElementById('formInscription');
 
-formInscription.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Validation des champs obligatoires
-    const nom = document.getElementById('nom').value;
-    const email = document.getElementById('email').value;
-    const tel = document.getElementById('tel').value;
-    const cours = document.getElementById('cours').value;
-    
-    if (!nom || !email || !tel) {
-        alert('❌ Veuillez remplir tous les champs obligatoires (*)');
-        return;
-    }
-    
-    // Vérification email basique
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('❌ Veuillez entrer une adresse email valide (exemple: nom@email.com)');
-        return;
-    }
-    
-    // Vérification téléphone
-    const telRegex = /^[0-9\s\-\+\(\)]{8,15}$/;
-    if (!telRegex.test(tel.replace(/\s/g, ''))) {
-        alert('❌ Veuillez entrer un numéro de téléphone valide');
-        return;
-    }
-    
-    // Demander confirmation AVANT de réinitialiser
-    const confirmation = confirm(`Êtes-vous sûr de vouloir vous inscrire au cours : ${cours} ?`);
-    
-    if (!confirmation) {
-        return; // Annuler si l'utilisateur clique sur "Annuler"
-    }
-    
-    // Récupérer toutes les données
-    const formData = {
-        nom: nom,
-        email: email,
-        tel: tel,
-        niveau: document.getElementById('niveau').value,
-        cours: cours,
-        message: document.getElementById('message').value,
-        dateInscription: new Date().toLocaleString('fr-FR')
-    };
-    
-    // SIMULATION D'ENVOI AU SERVEUR
-    console.log('📧 Données d\'inscription envoyées:', formData);
-    
-    // Afficher un résumé avant de vider
-    const summary = `
-        RÉSUMÉ DE VOTRE INSCRIPTION :
-        ------------------------------
-        👤 Nom : ${formData.nom}
-        📧 Email : ${formData.email}
-        📱 Téléphone : ${formData.tel}
-        🏄 Niveau : ${formData.niveau}
-        📋 Cours : ${formData.cours}
-        📅 Date : ${formData.dateInscription}
-        ------------------------------
+if (formInscription) {
+    formInscription.addEventListener('submit', function(e) {
+        e.preventDefault(); // Empêche le rechargement de la page
         
-        Votre inscription a bien été enregistrée !
-    `;
-    
-    // Afficher dans la console ET dans une alerte
-    console.log(summary);
-    
-    // Message de succès amélioré
-    const successMessage = `
-        ✅ INSCRIPTION CONFIRMÉE !
+        // Récupérer les valeurs
+        const nom = document.getElementById('nom').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const tel = document.getElementById('tel').value.trim();
+        const niveau = document.getElementById('niveau').value;
+        const cours = document.getElementById('cours').value;
+        const message = document.getElementById('message').value.trim();
         
-        Merci ${formData.nom} !
+        // Validation basique
+        if (!nom || !email || !tel) {
+            alert('⚠️ Veuillez remplir tous les champs obligatoires (*)');
+            return;
+        }
         
-        Nous avons bien reçu votre inscription pour :
-        • Cours : ${formData.cours}
-        • Niveau : ${formData.niveau}
+        // Validation email
+        if (!email.includes('@') || !email.includes('.')) {
+            alert('⚠️ Veuillez entrer une adresse email valide');
+            document.getElementById('email').focus();
+            return;
+        }
         
-        📧 Un email de confirmation a été envoyé à :
-        ${formData.email}
+        // Validation téléphone (au moins 8 chiffres)
+        const telNumeric = tel.replace(/\D/g, '');
+        if (telNumeric.length < 8) {
+            alert('⚠️ Veuillez entrer un numéro de téléphone valide (au moins 8 chiffres)');
+            document.getElementById('tel').focus();
+            return;
+        }
         
-        📱 Nous vous contacterons au :
-        ${formData.tel}
+        // Afficher les données dans la console pour vérification
+        console.log('=== INSCRIPTION ENVOYÉE ===');
+        console.log('Nom:', nom);
+        console.log('Email:', email);
+        console.log('Téléphone:', tel);
+        console.log('Niveau:', niveau);
+        console.log('Cours:', cours);
+        console.log('Message:', message);
+        console.log('Date:', new Date().toLocaleString());
+        console.log('==========================');
         
-        dans les 24 heures pour finaliser votre réservation.
+        // Afficher confirmation dans la page (sans alerte)
+        const confirmationMessage = document.getElementById('confirmationMessage');
+        const confirmationText = document.getElementById('confirmationText');
         
-        RÉFÉRENCE : SURF-INSCR-${Date.now().toString().slice(-6)}
-    `;
-    
-    // Utiliser alert OU afficher dans la page (au choix)
-    alert(successMessage);
-    
-    // OPTION 1: Afficher un message sur la page (recommandé)
-    afficherConfirmationInscription(formData);
-    
-    // OPTION 2: Réinitialiser le formulaire APRÈS confirmation
-    setTimeout(() => {
-        formInscription.reset();
-        console.log('✅ Formulaire réinitialisé après confirmation');
-    }, 3000); // Attendre 3 secondes avant de réinitialiser
-    
-    // Faire défiler vers le haut pour voir le message
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// Fonction pour afficher la confirmation sur la page
-function afficherConfirmationInscription(data) {
-    // Créer ou trouver l'élément de confirmation
-    let confirmationDiv = document.getElementById('confirmationInscription');
-    
-    if (!confirmationDiv) {
-        // Créer l'élément s'il n'existe pas
-        confirmationDiv = document.createElement('div');
-        confirmationDiv.id = 'confirmationInscription';
-        confirmationDiv.className = 'confirmation-message';
+        if (confirmationMessage && confirmationText) {
+            confirmationText.innerHTML = `
+                <strong>Merci ${nom} !</strong><br>
+                Votre inscription a été enregistrée avec succès.<br>
+                <br>
+                <strong>Récapitulatif :</strong><br>
+                • Cours : ${cours}<br>
+                • Niveau : ${niveau}<br>
+                • Email : ${email}<br>
+                • Téléphone : ${tel}<br>
+                <br>
+                <small><i class="fas fa-info-circle"></i> Nous vous contacterons dans les 24h.</small>
+            `;
+            confirmationMessage.style.display = 'block';
+            
+            // Faire défiler vers la confirmation
+            confirmationMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // NE PAS RÉINITIALISER LE FORMULAIRE IMMÉDIATEMENT
+            // On garde les données pour que l'utilisateur puisse les vérifier
+            
+            // Option : Réinitialiser seulement après 10 secondes
+            setTimeout(() => {
+                // Vider seulement certains champs si vous voulez
+                // document.getElementById('message').value = '';
+                // Mais garder le nom, email, tel pour modification
+            }, 10000);
+        } else {
+            // Fallback si l'élément n'existe pas
+            alert(`✅ Inscription réussie !\n\nMerci ${nom} !\n\nNous vous contacterons au ${tel} dans les 24h.`);
+        }
         
-        // Insérer après le formulaire
-        formInscription.parentNode.insertBefore(confirmationDiv, formInscription.nextSibling);
-    }
-    
-    // Contenu HTML de la confirmation
-    confirmationDiv.innerHTML = `
-        <div class="confirmation-content">
-            <div class="confirmation-header">
-                <i class="fas fa-check-circle"></i>
-                <h3>Inscription Confirmée !</h3>
-            </div>
-            <div class="confirmation-body">
-                <p><strong>Merci ${data.nom} !</strong></p>
-                <p>Votre inscription a été enregistrée avec succès.</p>
-                
-                <div class="confirmation-details">
-                    <p><i class="fas fa-envelope"></i> <strong>Email :</strong> ${data.email}</p>
-                    <p><i class="fas fa-phone"></i> <strong>Téléphone :</strong> ${data.tel}</p>
-                    <p><i class="fas fa-graduation-cap"></i> <strong>Cours :</strong> ${data.cours}</p>
-                    <p><i class="fas fa-signal"></i> <strong>Niveau :</strong> ${data.niveau}</p>
-                    <p><i class="fas fa-calendar"></i> <strong>Date :</strong> ${data.dateInscription}</p>
-                </div>
-                
-                <div class="confirmation-reference">
-                    <p><i class="fas fa-hashtag"></i> <strong>Référence :</strong> SURF-INSCR-${Date.now().toString().slice(-6)}</p>
-                </div>
-                
-                <p class="confirmation-note">
-                    <i class="fas fa-info-circle"></i> 
-                    Nous vous contacterons dans les 24h pour confirmer votre réservation.
-                </p>
-            </div>
-            <div class="confirmation-footer">
-                <button onclick="fermerConfirmation()" class="btn-fermer">
-                    <i class="fas fa-times"></i> Fermer
-                </button>
-                <button onclick="imprimerConfirmation()" class="btn-imprimer">
-                    <i class="fas fa-print"></i> Imprimer
-                </button>
-            </div>
-        </div>
-    `;
-    
-    // Ajouter les styles si nécessaire
-    ajouterStylesConfirmation();
-}
-
-// Fonction pour fermer la confirmation
-function fermerConfirmation() {
-    const confirmationDiv = document.getElementById('confirmationInscription');
-    if (confirmationDiv) {
-        confirmationDiv.style.display = 'none';
-        // Réinitialiser le formulaire APRÈS fermeture
-        formInscription.reset();
-    }
-}
-
-// Fonction pour imprimer la confirmation
-function imprimerConfirmation() {
-    const printContent = document.querySelector('.confirmation-content').cloneNode(true);
-    const printWindow = window.open('', '_blank');
-    
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Confirmation d'Inscription - Maroc Surf Academy</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                    h3 { color: #1a5f7a; }
-                    .confirmation-details { margin: 20px 0; }
-                    .confirmation-details p { margin: 5px 0; }
-                    .confirmation-reference { 
-                        background: #f0f8ff; 
-                        padding: 10px; 
-                        border-radius: 5px; 
-                        margin: 15px 0;
-                    }
-                    @media print {
-                        button { display: none; }
-                    }
-                </style>
-            </head>
-            <body>
-                ${printContent.innerHTML}
-            </body>
-        </html>
-    `);
-    
-    printWindow.document.close();
-    printWindow.print();
-}
-
-// Fonction pour ajouter les styles CSS de confirmation
-function ajouterStylesConfirmation() {
-    if (!document.getElementById('confirmationStyles')) {
-        const style = document.createElement('style');
-        style.id = 'confirmationStyles';
-        style.textContent = `
-            .confirmation-message {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 2rem;
-                border-radius: 15px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-                z-index: 1000;
-                width: 90%;
-                max-width: 500px;
-                animation: slideIn 0.5s ease-out;
-                border: 3px solid #57c5b6;
-            }
-            
-            .confirmation-content {
-                text-align: center;
-            }
-            
-            .confirmation-header {
-                background: linear-gradient(135deg, #1a5f7a, #57c5b6);
-                color: white;
-                padding: 1rem;
-                border-radius: 10px 10px 0 0;
-                margin: -2rem -2rem 1.5rem -2rem;
-            }
-            
-            .confirmation-header i {
-                font-size: 3rem;
-                margin-bottom: 0.5rem;
-            }
-            
-            .confirmation-header h3 {
-                margin: 0;
-                color: white;
-            }
-            
-            .confirmation-body {
-                padding: 1rem 0;
-            }
-            
-            .confirmation-details {
-                background: #f8f9fa;
-                padding: 1rem;
-                border-radius: 8px;
-                margin: 1rem 0;
-                text-align: left;
-            }
-            
-            .confirmation-details p {
-                margin: 0.5rem 0;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .confirmation-details i {
-                color: #57c5b6;
-                width: 20px;
-            }
-            
-            .confirmation-reference {
-                background: #e0f7fa;
-                padding: 0.8rem;
-                border-radius: 5px;
-                margin: 1rem 0;
-                font-weight: bold;
-                color: #1a5f7a;
-            }
-            
-            .confirmation-note {
-                font-style: italic;
-                color: #666;
-                font-size: 0.9rem;
-                margin-top: 1rem;
-                padding-top: 1rem;
-                border-top: 1px dashed #ddd;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
-            
-            .confirmation-footer {
-                display: flex;
-                gap: 1rem;
-                justify-content: center;
-                margin-top: 1.5rem;
-            }
-            
-            .btn-fermer, .btn-imprimer {
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-weight: bold;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                transition: all 0.3s;
-            }
-            
-            .btn-fermer {
-                background: #ff6b6b;
-                color: white;
-            }
-            
-            .btn-fermer:hover {
-                background: #ff5252;
-            }
-            
-            .btn-imprimer {
-                background: #1a5f7a;
-                color: white;
-            }
-            
-            .btn-imprimer:hover {
-                background: #57c5b6;
-            }
-            
-            @keyframes slideIn {
-                from {
-                    opacity: 0;
-                    transform: translate(-50%, -60%);
-                }
-                to {
-                    opacity: 1;
-                    transform: translate(-50%, -50%);
-                }
-            }
-            
-            /* Overlay pour la modal */
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 999;
-                display: none;
-            }
-            
-            .modal-overlay.active {
-                display: block;
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Ajouter l'overlay
-        const overlay = document.createElement('div');
-        overlay.className = 'modal-overlay active';
-        overlay.onclick = fermerConfirmation;
-        document.body.appendChild(overlay);
-    }
-}
-
-// Modifier la fonction fermerConfirmation pour gérer l'overlay
-function fermerConfirmation() {
-    const confirmationDiv = document.getElementById('confirmationInscription');
-    const overlay = document.querySelector('.modal-overlay');
-    
-    if (confirmationDiv) {
-        confirmationDiv.style.display = 'none';
-    }
-    
-    if (overlay) {
-        overlay.remove();
-    }
-    
-    // Réinitialiser le formulaire APRÈS fermeture
-    setTimeout(() => {
-        formInscription.reset();
-        console.log('✅ Formulaire réinitialisé après fermeture de la confirmation');
-    }, 500);
-}
-    
-    // Récupérer toutes les données
-    const formData = {
-        nom: nom,
-        email: email,
-        tel: tel,
-        niveau: document.getElementById('niveau').value,
-        cours: document.getElementById('cours').value,
-        message: document.getElementById('message').value,
-        date: new Date().toLocaleDateString('fr-FR')
-    };
-    
-    // SIMULATION D'ENVOI AU SERVEUR
-    console.log('📧 Données d\'inscription envoyées:', formData);
-    
-    // Message de succès
-    const successMessage = `
-        ✅ INSCRIPTION RÉUSSIE !
-        
-        Merci ${formData.nom} !
-        
-        Détails de votre inscription :
-        - Cours : ${formData.cours}
-        - Niveau : ${formData.niveau}
-        - Date : ${formData.date}
-        
-        Un email de confirmation a été envoyé à :
-        ${formData.email}
-        
-        Nous vous contacterons au :
-        ${formData.tel}
-        
-        pour confirmer votre réservation.
-    `;
-    
-    alert(successMessage);
-    
-    // Réinitialiser le formulaire
-    formInscription.reset();
-    
-    // Rediriger vers la section contact
-    setTimeout(() => {
-        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-    }, 500);
-});
-
-// CALENDRIER SIMPLIFIÉ + CHAMP DATE ÉDITABLE
-let selectedDate = null;
-
-function generateCalendar() {
-    const calendar = document.getElementById('calendar');
-    calendar.innerHTML = '';
-    
-    // En-têtes des jours
-    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-    days.forEach(day => {
-        const dayHeader = document.createElement('div');
-        dayHeader.className = 'day-header';
-        dayHeader.textContent = day;
-        calendar.appendChild(dayHeader);
+        // Optionnel : Ajouter un bouton "Nouvelle inscription"
+        ajouterBoutonNouvelleInscription();
     });
+}
+
+// Fonction pour ajouter un bouton "Nouvelle inscription"
+function ajouterBoutonNouvelleInscription() {
+    // Vérifier si le bouton existe déjà
+    if (!document.getElementById('btnNouvelleInscription')) {
+        const btn = document.createElement('button');
+        btn.id = 'btnNouvelleInscription';
+        btn.className = 'btn-nouvelle';
+        btn.innerHTML = '<i class="fas fa-plus-circle"></i> Nouvelle inscription';
+        btn.type = 'button';
+        
+        btn.addEventListener('click', function() {
+            // Réinitialiser le formulaire
+            formInscription.reset();
+            
+            // Cacher le message de confirmation
+            const confirmationMessage = document.getElementById('confirmationMessage');
+            if (confirmationMessage) {
+                confirmationMessage.style.display = 'none';
+            }
+            
+            // Retirer ce bouton
+            this.remove();
+            
+            // Remettre le focus sur le premier champ
+            document.getElementById('nom').focus();
+        });
+        
+        // Ajouter le bouton après le formulaire
+        const formContainer = document.querySelector('.form-container');
+        if (formContainer) {
+            formContainer.appendChild(btn);
+        }
+    }
+}
+
+// ============================================
+// FORMULAIRE RENDEZ-VOUS
+// ============================================
+const formRdv = document.getElementById('formRdv');
+if (formRdv) {
+    formRdv.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const date = document.getElementById('rdv-date').value;
+        const horaire = document.getElementById('rdv-horaire').value;
+        const personnes = document.getElementById('rdv-personnes').value;
+        const nom = document.getElementById('rdv-nom') ? document.getElementById('rdv-nom').value : '';
+        const tel = document.getElementById('rdv-tel') ? document.getElementById('rdv-tel').value : '';
+        
+        if (!date || !horaire || !personnes) {
+            alert('⚠️ Veuillez remplir tous les champs du rendez-vous');
+            return;
+        }
+        
+        // Afficher confirmation
+        const rdvConfirmation = document.getElementById('rdvConfirmation');
+        if (rdvConfirmation) {
+            const dateObj = new Date(date);
+            const dateFormatted = dateObj.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            rdvConfirmation.innerHTML = `
+                <div class="confirmation-success">
+                    <h4><i class="fas fa-check-circle"></i> Rendez-vous confirmé !</h4>
+                    <div class="confirmation-details">
+                        <p><strong>📅 Date :</strong> ${dateFormatted}</p>
+                        <p><strong>🕐 Horaire :</strong> ${horaire}</p>
+                        <p><strong>👥 Personnes :</strong> ${personnes}</p>
+                        ${nom ? `<p><strong>👤 Nom :</strong> ${nom}</p>` : ''}
+                        ${tel ? `<p><strong>📱 Téléphone :</strong> ${tel}</p>` : ''}
+                        <p><strong>🔖 Référence :</strong> RDV-${Date.now().toString().slice(-6)}</p>
+                    </div>
+                </div>
+            `;
+            rdvConfirmation.style.display = 'block';
+            
+            // NE PAS réinitialiser automatiquement
+            // formRdv.reset();
+        }
+    });
+}
+
+// ============================================
+// CALENDRIER SIMPLE
+// ============================================
+function initCalendar() {
+    const calendar = document.getElementById('calendar');
+    if (!calendar) return;
     
     // Date actuelle
     const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    
+    // Générer le calendrier
+    generateCalendar(currentYear, currentMonth);
+}
+
+function generateCalendar(year, month) {
+    const calendar = document.getElementById('calendar');
+    if (!calendar) return;
+    
+    calendar.innerHTML = '';
+    
+    // En-têtes
+    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+    days.forEach(day => {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'day-header';
+        dayEl.textContent = day;
+        calendar.appendChild(dayEl);
+    });
     
     // Premier jour du mois
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
+    const today = new Date();
     
-    // Jours vides avant le 1er
+    // Jours vides avant
     for (let i = 0; i < firstDay.getDay(); i++) {
-        const emptyDay = document.createElement('div');
-        emptyDay.className = 'day empty';
-        calendar.appendChild(emptyDay);
+        const empty = document.createElement('div');
+        empty.className = 'day empty';
+        calendar.appendChild(empty);
     }
     
-    // Créer les jours du mois
+    // Jours du mois
     for (let day = 1; day <= lastDay.getDate(); day++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'day';
-        dayElement.textContent = day;
+        const dayEl = document.createElement('div');
+        dayEl.className = 'day';
+        dayEl.textContent = day;
         
         const currentDate = new Date(year, month, day);
         
-        // Désactiver les jours passés
+        // Désactiver jours passés
         if (currentDate < today && currentDate.getDate() !== today.getDate()) {
-            dayElement.classList.add('disabled');
+            dayEl.classList.add('disabled');
         } else {
-            // Ajouter événement de clic
-            dayElement.addEventListener('click', () => {
-                // Formater la date au format YYYY-MM-DD pour l'input date
+            // Cliquer sur une date
+            dayEl.addEventListener('click', function() {
+                // Formater la date YYYY-MM-DD
                 const yyyy = currentDate.getFullYear();
                 const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
                 const dd = String(currentDate.getDate()).padStart(2, '0');
                 const dateFormatted = `${yyyy}-${mm}-${dd}`;
                 
                 // Mettre à jour le champ date
-                document.getElementById('rdv-date').value = dateFormatted;
+                const dateInput = document.getElementById('rdv-date');
+                if (dateInput) {
+                    dateInput.value = dateFormatted;
+                }
                 
                 // Mettre en surbrillance
                 document.querySelectorAll('.day.selected').forEach(el => {
                     el.classList.remove('selected');
                 });
-                dayElement.classList.add('selected');
+                this.classList.add('selected');
             });
         }
         
-        calendar.appendChild(dayElement);
-    }
-    
-    // Ajouter la navigation des mois
-    addMonthNavigation();
-}
-
-function addMonthNavigation() {
-    const calendrierDiv = document.querySelector('.calendrier');
-    const existingNav = calendrierDiv.querySelector('.calendar-nav');
-    
-    if (!existingNav) {
-        const navDiv = document.createElement('div');
-        navDiv.className = 'calendar-nav';
-        navDiv.innerHTML = `
-            <button type="button" id="prevMonth"><i class="fas fa-chevron-left"></i> Mois précédent</button>
-            <span id="currentMonth"></span>
-            <button type="button" id="nextMonth">Mois suivant <i class="fas fa-chevron-right"></i></button>
-        `;
-        
-        const title = calendrierDiv.querySelector('h3');
-        title.after(navDiv);
-        
-        // Variables pour la navigation
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
-        
-        // Mettre à jour l'affichage
-        function updateMonthDisplay() {
-            const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-                              "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-            document.getElementById('currentMonth').textContent = 
-                `${monthNames[currentMonth]} ${currentYear}`;
-            
-            // Regénérer le calendrier
-            generateCalendarForMonth(currentYear, currentMonth);
-        }
-        
-        // Événements
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            updateMonthDisplay();
-        });
-        
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            updateMonthDisplay();
-        });
-        
-        updateMonthDisplay();
+        calendar.appendChild(dayEl);
     }
 }
 
-function generateCalendarForMonth(year, month) {
-    const calendar = document.getElementById('calendar');
-    calendar.innerHTML = '';
-    
-    // En-têtes
-    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-    days.forEach(day => {
-        const dayHeader = document.createElement('div');
-        dayHeader.className = 'day-header';
-        dayHeader.textContent = day;
-        calendar.appendChild(dayHeader);
-    });
-    
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const today = new Date();
-    
-    // Jours vides
-    for (let i = 0; i < firstDay.getDay(); i++) {
-        const emptyDay = document.createElement('div');
-        emptyDay.className = 'day empty';
-        calendar.appendChild(emptyDay);
-    }
-    
-    // Jours du mois
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'day';
-        dayElement.textContent = day;
-        
-        const currentDate = new Date(year, month, day);
-        
-        // Désactiver jours passés
-        if (currentDate < today && (
-            currentDate.getDate() !== today.getDate() ||
-            currentDate.getMonth() !== today.getMonth() ||
-            currentDate.getFullYear() !== today.getFullYear()
-        )) {
-            dayElement.classList.add('disabled');
-        } else {
-            dayElement.addEventListener('click', () => {
-                const yyyy = currentDate.getFullYear();
-                const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
-                const dd = String(currentDate.getDate()).padStart(2, '0');
-                document.getElementById('rdv-date').value = `${yyyy}-${mm}-${dd}`;
-                
-                document.querySelectorAll('.day.selected').forEach(el => {
-                    el.classList.remove('selected');
-                });
-                dayElement.classList.add('selected');
-            });
-        }
-        
-        calendar.appendChild(dayElement);
-    }
-}
-
-// FORMULAIRE RDV - CORRIGÉ
-const formRdv = document.getElementById('formRdv');
-const rdvConfirmation = document.getElementById('rdvConfirmation');
-
-formRdv.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Validation
-    const date = document.getElementById('rdv-date').value;
-    const horaire = document.getElementById('rdv-horaire').value;
-    const personnes = document.getElementById('rdv-personnes').value;
-    const nom = document.getElementById('rdv-nom').value;
-    const tel = document.getElementById('rdv-tel').value;
-    
-    if (!date || !horaire || !nom || !tel) {
-        alert('Veuillez remplir tous les champs obligatoires (*)');
-        return;
-    }
-    
-    if (personnes < 1 || personnes > 10) {
-        alert('Le nombre de personnes doit être entre 1 et 10');
-        return;
-    }
-    
-    // Formater la date
-    const dateObj = new Date(date);
-    const dateFormatted = dateObj.toLocaleDateString('fr-FR', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-    
-    // Afficher confirmation
-    rdvConfirmation.innerHTML = `
-        <div class="confirmation-success">
-            <h4><i class="fas fa-check-circle"></i> Rendez-vous confirmé !</h4>
-            <div class="confirmation-details">
-                <p><strong>📅 Date :</strong> ${dateFormatted}</p>
-                <p><strong>🕐 Horaire :</strong> ${horaire}</p>
-                <p><strong>👥 Personnes :</strong> ${personnes}</p>
-                <p><strong>👤 Nom :</strong> ${nom}</p>
-                <p><strong>📱 Téléphone :</strong> ${tel}</p>
-                <p><strong>🔖 Référence :</strong> SURF-${Date.now().toString().slice(-8)}</p>
-            </div>
-            <p class="confirmation-note">
-                <i class="fas fa-info-circle"></i> Un SMS de confirmation sera envoyé au ${tel}
-            </p>
-        </div>
-    `;
-    
-    rdvConfirmation.style.display = 'block';
-    rdvConfirmation.scrollIntoView({ behavior: 'smooth' });
-    
-    // Réinitialiser après 8 secondes
-    setTimeout(() => {
-        formRdv.reset();
-        rdvConfirmation.style.display = 'none';
-        document.querySelectorAll('.day.selected').forEach(el => {
-            el.classList.remove('selected');
-        });
-    }, 8000);
-});
-
-// Initialiser au chargement
+// ============================================
+// INITIALISATION
+// ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    generateCalendar();
+    // Initialiser le calendrier
+    initCalendar();
     
     // Définir la date d'aujourd'hui par défaut
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
-    document.getElementById('rdv-date').value = `${yyyy}-${mm}-${dd}`;
     
-    // Sélectionner le jour d'aujourd'hui dans le calendrier
-    const todayElement = document.querySelector('.day:not(.disabled):not(.empty)');
-    if (todayElement && parseInt(todayElement.textContent) === today.getDate()) {
-        todayElement.classList.add('selected');
+    const dateInput = document.getElementById('rdv-date');
+    if (dateInput) {
+        dateInput.value = `${yyyy}-${mm}-${dd}`;
+        dateInput.min = `${yyyy}-${mm}-${dd}`; // Pas de dates passées
+    }
+    
+    // Mettre le focus sur le premier champ d'inscription
+    const nomInput = document.getElementById('nom');
+    if (nomInput) {
+        nomInput.focus();
     }
 });
 
-// Ajouter des styles CSS pour le calendrier
-const style = document.createElement('style');
-style.textContent = `
+// ============================================
+// STYLES DYNAMIQUES
+// ============================================
+const dynamicStyles = document.createElement('style');
+dynamicStyles.textContent = `
+    /* Styles pour le calendrier */
     .day-header {
-        padding: 12px 5px;
+        padding: 10px;
         text-align: center;
         font-weight: bold;
-        background-color: #1a5f7a;
+        background: #1a5f7a;
         color: white;
         border-radius: 5px;
-        font-size: 0.9rem;
     }
     
     .day {
-        padding: 12px 5px;
+        padding: 10px;
         text-align: center;
+        background: white;
+        border: 1px solid #ddd;
         border-radius: 5px;
         cursor: pointer;
-        transition: all 0.3s;
-        border: 1px solid #e0e0e0;
-        background-color: white;
+        transition: all 0.2s;
     }
     
     .day:hover:not(.disabled):not(.empty) {
-        background-color: #e0f7fa;
-        transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        background: #e0f7fa;
+        transform: scale(1.05);
     }
     
     .day.selected {
-        background-color: #57c5b6 !important;
+        background: #57c5b6 !important;
         color: white !important;
         font-weight: bold;
-        border-color: #57c5b6;
     }
     
     .day.disabled {
-        background-color: #f8f9fa;
-        color: #ccc;
+        background: #f5f5f5;
+        color: #999;
         cursor: not-allowed;
     }
     
     .day.empty {
-        background-color: transparent;
+        background: transparent;
         border-color: transparent;
         cursor: default;
     }
@@ -808,119 +392,65 @@ style.textContent = `
     #calendar {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 8px;
-        margin: 1.5rem 0;
+        gap: 5px;
+        margin: 15px 0;
     }
     
-    .calendar-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 1.5rem 0;
-        padding: 10px;
-        background-color: #f0f8ff;
-        border-radius: 8px;
-        border: 1px solid #d1e7ff;
-    }
-    
-    .calendar-nav button {
-        background-color: #1a5f7a;
+    /* Bouton nouvelle inscription */
+    .btn-nouvelle {
+        display: block;
+        margin: 20px auto;
+        padding: 12px 25px;
+        background: #1a5f7a;
         color: white;
         border: none;
-        padding: 8px 15px;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        transition: background-color 0.3s;
-    }
-    
-    .calendar-nav button:hover {
-        background-color: #57c5b6;
-    }
-    
-    #currentMonth {
+        font-size: 1rem;
         font-weight: bold;
-        color: #1a5f7a;
-        font-size: 1.1rem;
+        transition: background 0.3s;
     }
     
-    .rdv-confirmation {
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
-        border-radius: 10px;
-        border-left: 5px solid #57c5b6;
-        display: none;
-        animation: fadeIn 0.5s ease-in;
+    .btn-nouvelle:hover {
+        background: #57c5b6;
     }
     
-    .confirmation-success h4 {
+    .btn-nouvelle i {
+        margin-right: 8px;
+    }
+    
+    /* Message de confirmation */
+    .confirmation-message {
+        margin-top: 20px;
+        padding: 15px;
+        background: #e0f7fa;
+        border-radius: 8px;
+        border-left: 4px solid #57c5b6;
+        animation: fadeIn 0.5s;
+    }
+    
+    .confirmation-message h4 {
         color: #159895;
-        margin-bottom: 1rem;
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
         gap: 10px;
-        font-size: 1.3rem;
-    }
-    
-    .confirmation-details {
-        background: white;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-        border: 1px solid #e0f7fa;
-    }
-    
-    .confirmation-details p {
-        margin-bottom: 0.8rem;
-        padding-bottom: 0.8rem;
-        border-bottom: 1px dashed #eee;
-    }
-    
-    .confirmation-details p:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
-    }
-    
-    .confirmation-note {
-        font-style: italic;
-        color: #666;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid #d1e7ff;
-    }
-    
-    small {
-        display: block;
-        margin-top: 5px;
-        color: #666;
-        font-size: 0.85rem;
     }
     
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
+        from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
     }
     
-    input[type="date"] {
-        font-family: inherit;
-        padding: 12px;
-    }
-    
-    input:invalid {
-        border-color: #ff6b6b;
-    }
-    
-    input:valid {
+    /* Amélioration des formulaires */
+    input:focus, select:focus, textarea:focus {
+        outline: none;
         border-color: #57c5b6;
+        box-shadow: 0 0 0 2px rgba(87, 197, 182, 0.2);
+    }
+    
+    .btn-submit:active {
+        transform: translateY(2px);
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(dynamicStyles);
