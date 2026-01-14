@@ -1,0 +1,555 @@
+// Navigation mobile
+const burger = document.querySelector('.burger');
+const nav = document.querySelector('.nav-links');
+
+burger.addEventListener('click', () => {
+    nav.classList.toggle('active');
+    burger.classList.toggle('toggle');
+});
+
+// Fermer le menu mobile quand on clique sur un lien
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        nav.classList.remove('active');
+        burger.classList.remove('toggle');
+    });
+});
+
+// Gestion des tarifs
+function choisirTarif(tarif) {
+    alert(`Vous avez choisi le tarif: ${tarif}. Vous allez être redirigé vers le formulaire d'inscription.`);
+    
+    document.getElementById('inscription').scrollIntoView({ behavior: 'smooth' });
+    
+    const selectCours = document.getElementById('cours');
+    const options = Array.from(selectCours.options);
+    const optionIndex = options.findIndex(option => option.text.includes(tarif));
+    
+    if (optionIndex !== -1) {
+        selectCours.selectedIndex = optionIndex;
+    }
+}
+
+// Galerie photo
+const photos = document.querySelectorAll('.photo img');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+let currentPhotoIndex = 0;
+
+function showPhoto(index) {
+    photos.forEach((photo, i) => {
+        photo.style.opacity = i === index ? '1' : '0.5';
+        photo.style.transform = i === index ? 'scale(1.05)' : 'scale(1)';
+    });
+}
+
+prevBtn.addEventListener('click', () => {
+    currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+    showPhoto(currentPhotoIndex);
+});
+
+nextBtn.addEventListener('click', () => {
+    currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+    showPhoto(currentPhotoIndex);
+});
+
+showPhoto(0);
+
+// FORMULAIRE D'INSCRIPTION - CORRIGÉ
+const formInscription = document.getElementById('formInscription');
+
+formInscription.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validation des champs obligatoires
+    const nom = document.getElementById('nom').value;
+    const email = document.getElementById('email').value;
+    const tel = document.getElementById('tel').value;
+    
+    if (!nom || !email || !tel) {
+        alert('Veuillez remplir tous les champs obligatoires (*)');
+        return;
+    }
+    
+    // Vérification email basique
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Veuillez entrer une adresse email valide');
+        return;
+    }
+    
+    // Récupérer toutes les données
+    const formData = {
+        nom: nom,
+        email: email,
+        tel: tel,
+        niveau: document.getElementById('niveau').value,
+        cours: document.getElementById('cours').value,
+        message: document.getElementById('message').value,
+        date: new Date().toLocaleDateString('fr-FR')
+    };
+    
+    // SIMULATION D'ENVOI AU SERVEUR
+    console.log('📧 Données d\'inscription envoyées:', formData);
+    
+    // Message de succès
+    const successMessage = `
+        ✅ INSCRIPTION RÉUSSIE !
+        
+        Merci ${formData.nom} !
+        
+        Détails de votre inscription :
+        - Cours : ${formData.cours}
+        - Niveau : ${formData.niveau}
+        - Date : ${formData.date}
+        
+        Un email de confirmation a été envoyé à :
+        ${formData.email}
+        
+        Nous vous contacterons au :
+        ${formData.tel}
+        
+        pour confirmer votre réservation.
+    `;
+    
+    alert(successMessage);
+    
+    // Réinitialiser le formulaire
+    formInscription.reset();
+    
+    // Rediriger vers la section contact
+    setTimeout(() => {
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    }, 500);
+});
+
+// CALENDRIER SIMPLIFIÉ + CHAMP DATE ÉDITABLE
+let selectedDate = null;
+
+function generateCalendar() {
+    const calendar = document.getElementById('calendar');
+    calendar.innerHTML = '';
+    
+    // En-têtes des jours
+    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+    days.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'day-header';
+        dayHeader.textContent = day;
+        calendar.appendChild(dayHeader);
+    });
+    
+    // Date actuelle
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    
+    // Premier jour du mois
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    
+    // Jours vides avant le 1er
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'day empty';
+        calendar.appendChild(emptyDay);
+    }
+    
+    // Créer les jours du mois
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'day';
+        dayElement.textContent = day;
+        
+        const currentDate = new Date(year, month, day);
+        
+        // Désactiver les jours passés
+        if (currentDate < today && currentDate.getDate() !== today.getDate()) {
+            dayElement.classList.add('disabled');
+        } else {
+            // Ajouter événement de clic
+            dayElement.addEventListener('click', () => {
+                // Formater la date au format YYYY-MM-DD pour l'input date
+                const yyyy = currentDate.getFullYear();
+                const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(currentDate.getDate()).padStart(2, '0');
+                const dateFormatted = `${yyyy}-${mm}-${dd}`;
+                
+                // Mettre à jour le champ date
+                document.getElementById('rdv-date').value = dateFormatted;
+                
+                // Mettre en surbrillance
+                document.querySelectorAll('.day.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                dayElement.classList.add('selected');
+            });
+        }
+        
+        calendar.appendChild(dayElement);
+    }
+    
+    // Ajouter la navigation des mois
+    addMonthNavigation();
+}
+
+function addMonthNavigation() {
+    const calendrierDiv = document.querySelector('.calendrier');
+    const existingNav = calendrierDiv.querySelector('.calendar-nav');
+    
+    if (!existingNav) {
+        const navDiv = document.createElement('div');
+        navDiv.className = 'calendar-nav';
+        navDiv.innerHTML = `
+            <button type="button" id="prevMonth"><i class="fas fa-chevron-left"></i> Mois précédent</button>
+            <span id="currentMonth"></span>
+            <button type="button" id="nextMonth">Mois suivant <i class="fas fa-chevron-right"></i></button>
+        `;
+        
+        const title = calendrierDiv.querySelector('h3');
+        title.after(navDiv);
+        
+        // Variables pour la navigation
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        
+        // Mettre à jour l'affichage
+        function updateMonthDisplay() {
+            const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                              "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            document.getElementById('currentMonth').textContent = 
+                `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Regénérer le calendrier
+            generateCalendarForMonth(currentYear, currentMonth);
+        }
+        
+        // Événements
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateMonthDisplay();
+        });
+        
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateMonthDisplay();
+        });
+        
+        updateMonthDisplay();
+    }
+}
+
+function generateCalendarForMonth(year, month) {
+    const calendar = document.getElementById('calendar');
+    calendar.innerHTML = '';
+    
+    // En-têtes
+    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+    days.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'day-header';
+        dayHeader.textContent = day;
+        calendar.appendChild(dayHeader);
+    });
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const today = new Date();
+    
+    // Jours vides
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'day empty';
+        calendar.appendChild(emptyDay);
+    }
+    
+    // Jours du mois
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'day';
+        dayElement.textContent = day;
+        
+        const currentDate = new Date(year, month, day);
+        
+        // Désactiver jours passés
+        if (currentDate < today && (
+            currentDate.getDate() !== today.getDate() ||
+            currentDate.getMonth() !== today.getMonth() ||
+            currentDate.getFullYear() !== today.getFullYear()
+        )) {
+            dayElement.classList.add('disabled');
+        } else {
+            dayElement.addEventListener('click', () => {
+                const yyyy = currentDate.getFullYear();
+                const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(currentDate.getDate()).padStart(2, '0');
+                document.getElementById('rdv-date').value = `${yyyy}-${mm}-${dd}`;
+                
+                document.querySelectorAll('.day.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                dayElement.classList.add('selected');
+            });
+        }
+        
+        calendar.appendChild(dayElement);
+    }
+}
+
+// FORMULAIRE RDV - CORRIGÉ
+const formRdv = document.getElementById('formRdv');
+const rdvConfirmation = document.getElementById('rdvConfirmation');
+
+formRdv.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validation
+    const date = document.getElementById('rdv-date').value;
+    const horaire = document.getElementById('rdv-horaire').value;
+    const personnes = document.getElementById('rdv-personnes').value;
+    const nom = document.getElementById('rdv-nom').value;
+    const tel = document.getElementById('rdv-tel').value;
+    
+    if (!date || !horaire || !nom || !tel) {
+        alert('Veuillez remplir tous les champs obligatoires (*)');
+        return;
+    }
+    
+    if (personnes < 1 || personnes > 10) {
+        alert('Le nombre de personnes doit être entre 1 et 10');
+        return;
+    }
+    
+    // Formater la date
+    const dateObj = new Date(date);
+    const dateFormatted = dateObj.toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    
+    // Afficher confirmation
+    rdvConfirmation.innerHTML = `
+        <div class="confirmation-success">
+            <h4><i class="fas fa-check-circle"></i> Rendez-vous confirmé !</h4>
+            <div class="confirmation-details">
+                <p><strong>📅 Date :</strong> ${dateFormatted}</p>
+                <p><strong>🕐 Horaire :</strong> ${horaire}</p>
+                <p><strong>👥 Personnes :</strong> ${personnes}</p>
+                <p><strong>👤 Nom :</strong> ${nom}</p>
+                <p><strong>📱 Téléphone :</strong> ${tel}</p>
+                <p><strong>🔖 Référence :</strong> SURF-${Date.now().toString().slice(-8)}</p>
+            </div>
+            <p class="confirmation-note">
+                <i class="fas fa-info-circle"></i> Un SMS de confirmation sera envoyé au ${tel}
+            </p>
+        </div>
+    `;
+    
+    rdvConfirmation.style.display = 'block';
+    rdvConfirmation.scrollIntoView({ behavior: 'smooth' });
+    
+    // Réinitialiser après 8 secondes
+    setTimeout(() => {
+        formRdv.reset();
+        rdvConfirmation.style.display = 'none';
+        document.querySelectorAll('.day.selected').forEach(el => {
+            el.classList.remove('selected');
+        });
+    }, 8000);
+});
+
+// Initialiser au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    generateCalendar();
+    
+    // Définir la date d'aujourd'hui par défaut
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    document.getElementById('rdv-date').value = `${yyyy}-${mm}-${dd}`;
+    
+    // Sélectionner le jour d'aujourd'hui dans le calendrier
+    const todayElement = document.querySelector('.day:not(.disabled):not(.empty)');
+    if (todayElement && parseInt(todayElement.textContent) === today.getDate()) {
+        todayElement.classList.add('selected');
+    }
+});
+
+// Ajouter des styles CSS pour le calendrier
+const style = document.createElement('style');
+style.textContent = `
+    .day-header {
+        padding: 12px 5px;
+        text-align: center;
+        font-weight: bold;
+        background-color: #1a5f7a;
+        color: white;
+        border-radius: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .day {
+        padding: 12px 5px;
+        text-align: center;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid #e0e0e0;
+        background-color: white;
+    }
+    
+    .day:hover:not(.disabled):not(.empty) {
+        background-color: #e0f7fa;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .day.selected {
+        background-color: #57c5b6 !important;
+        color: white !important;
+        font-weight: bold;
+        border-color: #57c5b6;
+    }
+    
+    .day.disabled {
+        background-color: #f8f9fa;
+        color: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .day.empty {
+        background-color: transparent;
+        border-color: transparent;
+        cursor: default;
+    }
+    
+    #calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        margin: 1.5rem 0;
+    }
+    
+    .calendar-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1.5rem 0;
+        padding: 10px;
+        background-color: #f0f8ff;
+        border-radius: 8px;
+        border: 1px solid #d1e7ff;
+    }
+    
+    .calendar-nav button {
+        background-color: #1a5f7a;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background-color 0.3s;
+    }
+    
+    .calendar-nav button:hover {
+        background-color: #57c5b6;
+    }
+    
+    #currentMonth {
+        font-weight: bold;
+        color: #1a5f7a;
+        font-size: 1.1rem;
+    }
+    
+    .rdv-confirmation {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
+        border-radius: 10px;
+        border-left: 5px solid #57c5b6;
+        display: none;
+        animation: fadeIn 0.5s ease-in;
+    }
+    
+    .confirmation-success h4 {
+        color: #159895;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3rem;
+    }
+    
+    .confirmation-details {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border: 1px solid #e0f7fa;
+    }
+    
+    .confirmation-details p {
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px dashed #eee;
+    }
+    
+    .confirmation-details p:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .confirmation-note {
+        font-style: italic;
+        color: #666;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #d1e7ff;
+    }
+    
+    small {
+        display: block;
+        margin-top: 5px;
+        color: #666;
+        font-size: 0.85rem;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    input[type="date"] {
+        font-family: inherit;
+        padding: 12px;
+    }
+    
+    input:invalid {
+        border-color: #ff6b6b;
+    }
+    
+    input:valid {
+        border-color: #57c5b6;
+    }
+`;
+document.head.appendChild(style);
