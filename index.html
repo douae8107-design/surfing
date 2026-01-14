@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maroc Surf Academy - École de Surf au Maroc</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header et Navigation -->
+    <header>
+        <nav>
+            <div class="logo">
+                <h1><i class="fas fa-water"></i> Maroc Surf Academy</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#tarifs">Tarifs</a></li>
+                <li><a href="#galerie">Galerie</a></li>
+                <li><a href="#inscription">Inscription</a></li>
+                <li><a href="#rdv">Rendez-vous</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Section Accueil -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <h2>Vague après vague, découvrez le surf marocain</h2>
+            <p>École de surf certifiée à Taghazout, Agadir</p>
+            <a href="#inscription" class="btn">S'inscrire maintenant</a>
+        </div>
+    </section>
+
+    <!-- Section Tarifs -->
+    <section id="tarifs" class="tarifs">
+        <h2 class="section-title">Nos Tarifs (en Dirhams)</h2>
+        <div class="tarifs-container">
+            <div class="tarif-card">
+                <h3>Cours Débutant</h3>
+                <div class="prix">350 DH</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> 2 heures de cours</li>
+                    <li><i class="fas fa-check"></i> Matériel inclus</li>
+                    <li><i class="fas fa-check"></i> Moniteur diplômé</li>
+                    <li><i class="fas fa-check"></i> Assurance comprise</li>
+                </ul>
+                <button class="btn-tarif" onclick="choisirTarif('Débutant')">Choisir</button>
+            </div>
+            <div class="tarif-card popular">
+                <div class="badge">Populaire</div>
+                <h3>Pack 5 Cours</h3>
+                <div class="prix">1,500 DH</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> 5 cours de 2 heures</li>
+                    <li><i class="fas fa-check"></i> Matériel inclus</li>
+                    <li><i class="fas fa-check"></i> Vidéo analyse</li>
+                    <li><i class="fas fa-check"></i> Photo souvenir</li>
+                </ul>
+                <button class="btn-tarif" onclick="choisirTarif('Pack 5 Cours')">Choisir</button>
+            </div>
+            <div class="tarif-card">
+                <h3>Cours Privé</h3>
+                <div class="prix">600 DH</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Cours personnalisé</li>
+                    <li><i class="fas fa-check"></i> 2 heures de cours</li>
+                    <li><i class="fas fa-check"></i> Moniteur dédié</li>
+                    <li><i class="fas fa-check"></i> Flexibilité horaire</li>
+                </ul>
+                <button class="btn-tarif" onclick="choisirTarif('Privé')">Choisir</button>
+            </div>
+            <div class="tarif-card">
+                <h3>Stage Semaine</h3>
+                <div class="prix">2,800 DH</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> 7 jours de cours</li>
+                    <li><i class="fas fa-check"></i> Hébergement optionnel</li>
+                    <li><i class="fas fa-check"></i> Transport plages</li>
+                    <li><i class="fas fa-check"></i> Casier sécurisé</li>
+                </ul>
+                <button class="btn-tarif" onclick="choisirTarif('Stage Semaine')">Choisir</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Galerie -->
+    <section id="galerie" class="galerie">
+        <h2 class="section-title">Galerie Photos</h2>
+        <div class="galerie-container">
+            <div class="photo">
+                <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Surf au Maroc">
+            </div>
+            <div class="photo">
+                <img src="https://images.unsplash.com/photo-1511994717241-8e4e484dfa8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w-800&q=80" alt="École de surf">
+            </div>
+            <div class="photo">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Moniteur surf">
+            </div>
+            <div class="photo">
+                <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Plage Taghazout">
+            </div>
+        </div>
+        <div class="controls">
+            <button id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+            <button id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- Section Inscription -->
+    <section id="inscription" class="inscription">
+        <h2 class="section-title">Inscription en ligne</h2>
+        <div class="form-container">
+            <form id="formInscription">
+                <div class="form-group">
+                    <label for="nom">Nom complet *</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="tel">Téléphone *</label>
+                    <input type="tel" id="tel" name="tel" required>
+                </div>
+                <div class="form-group">
+                    <label for="niveau">Niveau de surf</label>
+                    <select id="niveau" name="niveau">
+                        <option value="debutant">Débutant</option>
+                        <option value="intermediaire">Intermédiaire</option>
+                        <option value="avance">Avancé</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cours">Type de cours</label>
+                    <select id="cours" name="cours">
+                        <option value="debutant">Cours Débutant (350 DH)</option>
+                        <option value="pack5">Pack 5 Cours (1,500 DH)</option>
+                        <option value="prive">Cours Privé (600 DH)</option>
+                        <option value="stage">Stage Semaine (2,800 DH)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message additionnel</label>
+                    <textarea id="message" name="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">S'inscrire</button>
+            </form>
+            <div class="form-info">
+                <h3><i class="fas fa-info-circle"></i> Informations importantes</h3>
+                <ul>
+                    <li><i class="fas fa-check"></i> Inscription confirmée par email</li>
+                    <li><i class="fas fa-check"></i> Annulation gratuite 24h à l'avance</li>
+                    <li><i class="fas fa-check"></i> Paiement sur place en DH ou carte</li>
+                    <li><i class="fas fa-check"></i> Certificat médical requis</li>
+                </ul>
+                <div class="info-card">
+                    <h4><i class="fas fa-clock"></i> Horaires d'ouverture</h4>
+                    <p>Lundi - Vendredi: 8h - 19h</p>
+                    <p>Samedi - Dimanche: 8h - 18h</p>
+                    <p>Cours disponibles: 8h - 17h</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Rendez-vous -->
+<section id="rdv" class="rdv">
+    <h2 class="section-title">Prendre un Rendez-vous</h2>
+    <div class="rdv-container">
+        <div class="calendrier">
+            <h3>Calendrier des disponibilités</h3>
+            <div id="calendar">
+                <!-- Calendrier généré par JavaScript -->
+            </div>
+            <p class="note">Sélectionnez une date OU écrivez-la directement</p>
+        </div>
+        <div class="rdv-form">
+            <h3>Formulaire de rendez-vous</h3>
+            <form id="formRdv">
+                <div class="form-group">
+                    <label for="rdv-date">Date souhaitée *</label>
+                    <input type="date" id="rdv-date" required>
+                    <small>Format: JJ/MM/AAAA ou utilisez le calendrier</small>
+                </div>
+                <div class="form-group">
+                    <label for="rdv-horaire">Horaire souhaité *</label>
+                    <select id="rdv-horaire" required>
+                        <option value="">-- Choisir un horaire --</option>
+                        <option value="8h">8h - 10h</option>
+                        <option value="10h">10h - 12h</option>
+                        <option value="14h">14h - 16h</option>
+                        <option value="16h">16h - 18h</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rdv-personnes">Nombre de personnes *</label>
+                    <input type="number" id="rdv-personnes" min="1" max="10" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="rdv-nom">Votre nom *</label>
+                    <input type="text" id="rdv-nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="rdv-tel">Téléphone *</label>
+                    <input type="tel" id="rdv-tel" required>
+                </div>
+                <button type="submit" class="btn-submit">Confirmer le RDV</button>
+            </form>
+            <div class="rdv-confirmation" id="rdvConfirmation">
+                <!-- Confirmation affichée par JavaScript -->
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Section Contact -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">Contactez-nous</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3><i class="fas fa-map-marker-alt"></i> Notre adresse</h3>
+                <p>Plage de Taghazout, Route côtière<br>Agadir 80000, Maroc</p>
+                
+                <h3><i class="fas fa-phone"></i> Téléphone</h3>
+                <p>+212 5 XX XX XX XX</p>
+                
+                <h3><i class="fas fa-envelope"></i> Email</h3>
+                <p>contact@marocsurfacademy.com</p>
+                
+                <h3><i class="fas fa-clock"></i> Horaires</h3>
+                <p>Lundi - Dimanche: 8h - 19h</p>
+                
+                <div class="social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tripadvisor"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="contact-map">
+                <h3><i class="fas fa-map"></i> Localisation</h3>
+                <div class="map-placeholder">
+                    <p>Carte interactive de Taghazout, Agadir</p>
+                    <div class="map-img">
+                        <img src="https://images.unsplash.com/photo-1597074866923-dc0589150358?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Carte Taghazout">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Maroc Surf Academy</h3>
+                <p>École de surf certifiée depuis 2010. Nous offrons des cours pour tous les niveaux dans les plus belles vagues du Maroc.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liens rapides</h3>
+                <ul>
+                    <li><a href="#accueil">Accueil</a></li>
+                    <li><a href="#tarifs">Tarifs</a></li>
+                    <li><a href="#galerie">Galerie</a></li>
+                    <li><a href="#inscription">Inscription</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Taghazout, Agadir</p>
+                <p><i class="fas fa-phone"></i> +212 5 XX XX XX XX</p>
+                <p><i class="fas fa-envelope"></i> contact@marocsurfacademy.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Maroc Surf Academy. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
