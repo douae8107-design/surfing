@@ -55,7 +55,7 @@ nextBtn.addEventListener('click', () => {
 
 showPhoto(0);
 
-// FORMULAIRE D'INSCRIPTION - CORRIGÉ
+// FORMULAIRE D'INSCRIPTION - CORRIGÉ (ne vide pas sans confirmation)
 const formInscription = document.getElementById('formInscription');
 
 formInscription.addEventListener('submit', function(e) {
@@ -65,18 +65,389 @@ formInscription.addEventListener('submit', function(e) {
     const nom = document.getElementById('nom').value;
     const email = document.getElementById('email').value;
     const tel = document.getElementById('tel').value;
+    const cours = document.getElementById('cours').value;
     
     if (!nom || !email || !tel) {
-        alert('Veuillez remplir tous les champs obligatoires (*)');
+        alert('❌ Veuillez remplir tous les champs obligatoires (*)');
         return;
     }
     
     // Vérification email basique
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        alert('Veuillez entrer une adresse email valide');
+        alert('❌ Veuillez entrer une adresse email valide (exemple: nom@email.com)');
         return;
     }
+    
+    // Vérification téléphone
+    const telRegex = /^[0-9\s\-\+\(\)]{8,15}$/;
+    if (!telRegex.test(tel.replace(/\s/g, ''))) {
+        alert('❌ Veuillez entrer un numéro de téléphone valide');
+        return;
+    }
+    
+    // Demander confirmation AVANT de réinitialiser
+    const confirmation = confirm(`Êtes-vous sûr de vouloir vous inscrire au cours : ${cours} ?`);
+    
+    if (!confirmation) {
+        return; // Annuler si l'utilisateur clique sur "Annuler"
+    }
+    
+    // Récupérer toutes les données
+    const formData = {
+        nom: nom,
+        email: email,
+        tel: tel,
+        niveau: document.getElementById('niveau').value,
+        cours: cours,
+        message: document.getElementById('message').value,
+        dateInscription: new Date().toLocaleString('fr-FR')
+    };
+    
+    // SIMULATION D'ENVOI AU SERVEUR
+    console.log('📧 Données d\'inscription envoyées:', formData);
+    
+    // Afficher un résumé avant de vider
+    const summary = `
+        RÉSUMÉ DE VOTRE INSCRIPTION :
+        ------------------------------
+        👤 Nom : ${formData.nom}
+        📧 Email : ${formData.email}
+        📱 Téléphone : ${formData.tel}
+        🏄 Niveau : ${formData.niveau}
+        📋 Cours : ${formData.cours}
+        📅 Date : ${formData.dateInscription}
+        ------------------------------
+        
+        Votre inscription a bien été enregistrée !
+    `;
+    
+    // Afficher dans la console ET dans une alerte
+    console.log(summary);
+    
+    // Message de succès amélioré
+    const successMessage = `
+        ✅ INSCRIPTION CONFIRMÉE !
+        
+        Merci ${formData.nom} !
+        
+        Nous avons bien reçu votre inscription pour :
+        • Cours : ${formData.cours}
+        • Niveau : ${formData.niveau}
+        
+        📧 Un email de confirmation a été envoyé à :
+        ${formData.email}
+        
+        📱 Nous vous contacterons au :
+        ${formData.tel}
+        
+        dans les 24 heures pour finaliser votre réservation.
+        
+        RÉFÉRENCE : SURF-INSCR-${Date.now().toString().slice(-6)}
+    `;
+    
+    // Utiliser alert OU afficher dans la page (au choix)
+    alert(successMessage);
+    
+    // OPTION 1: Afficher un message sur la page (recommandé)
+    afficherConfirmationInscription(formData);
+    
+    // OPTION 2: Réinitialiser le formulaire APRÈS confirmation
+    setTimeout(() => {
+        formInscription.reset();
+        console.log('✅ Formulaire réinitialisé après confirmation');
+    }, 3000); // Attendre 3 secondes avant de réinitialiser
+    
+    // Faire défiler vers le haut pour voir le message
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Fonction pour afficher la confirmation sur la page
+function afficherConfirmationInscription(data) {
+    // Créer ou trouver l'élément de confirmation
+    let confirmationDiv = document.getElementById('confirmationInscription');
+    
+    if (!confirmationDiv) {
+        // Créer l'élément s'il n'existe pas
+        confirmationDiv = document.createElement('div');
+        confirmationDiv.id = 'confirmationInscription';
+        confirmationDiv.className = 'confirmation-message';
+        
+        // Insérer après le formulaire
+        formInscription.parentNode.insertBefore(confirmationDiv, formInscription.nextSibling);
+    }
+    
+    // Contenu HTML de la confirmation
+    confirmationDiv.innerHTML = `
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <i class="fas fa-check-circle"></i>
+                <h3>Inscription Confirmée !</h3>
+            </div>
+            <div class="confirmation-body">
+                <p><strong>Merci ${data.nom} !</strong></p>
+                <p>Votre inscription a été enregistrée avec succès.</p>
+                
+                <div class="confirmation-details">
+                    <p><i class="fas fa-envelope"></i> <strong>Email :</strong> ${data.email}</p>
+                    <p><i class="fas fa-phone"></i> <strong>Téléphone :</strong> ${data.tel}</p>
+                    <p><i class="fas fa-graduation-cap"></i> <strong>Cours :</strong> ${data.cours}</p>
+                    <p><i class="fas fa-signal"></i> <strong>Niveau :</strong> ${data.niveau}</p>
+                    <p><i class="fas fa-calendar"></i> <strong>Date :</strong> ${data.dateInscription}</p>
+                </div>
+                
+                <div class="confirmation-reference">
+                    <p><i class="fas fa-hashtag"></i> <strong>Référence :</strong> SURF-INSCR-${Date.now().toString().slice(-6)}</p>
+                </div>
+                
+                <p class="confirmation-note">
+                    <i class="fas fa-info-circle"></i> 
+                    Nous vous contacterons dans les 24h pour confirmer votre réservation.
+                </p>
+            </div>
+            <div class="confirmation-footer">
+                <button onclick="fermerConfirmation()" class="btn-fermer">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+                <button onclick="imprimerConfirmation()" class="btn-imprimer">
+                    <i class="fas fa-print"></i> Imprimer
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Ajouter les styles si nécessaire
+    ajouterStylesConfirmation();
+}
+
+// Fonction pour fermer la confirmation
+function fermerConfirmation() {
+    const confirmationDiv = document.getElementById('confirmationInscription');
+    if (confirmationDiv) {
+        confirmationDiv.style.display = 'none';
+        // Réinitialiser le formulaire APRÈS fermeture
+        formInscription.reset();
+    }
+}
+
+// Fonction pour imprimer la confirmation
+function imprimerConfirmation() {
+    const printContent = document.querySelector('.confirmation-content').cloneNode(true);
+    const printWindow = window.open('', '_blank');
+    
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Confirmation d'Inscription - Maroc Surf Academy</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    h3 { color: #1a5f7a; }
+                    .confirmation-details { margin: 20px 0; }
+                    .confirmation-details p { margin: 5px 0; }
+                    .confirmation-reference { 
+                        background: #f0f8ff; 
+                        padding: 10px; 
+                        border-radius: 5px; 
+                        margin: 15px 0;
+                    }
+                    @media print {
+                        button { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                ${printContent.innerHTML}
+            </body>
+        </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.print();
+}
+
+// Fonction pour ajouter les styles CSS de confirmation
+function ajouterStylesConfirmation() {
+    if (!document.getElementById('confirmationStyles')) {
+        const style = document.createElement('style');
+        style.id = 'confirmationStyles';
+        style.textContent = `
+            .confirmation-message {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                width: 90%;
+                max-width: 500px;
+                animation: slideIn 0.5s ease-out;
+                border: 3px solid #57c5b6;
+            }
+            
+            .confirmation-content {
+                text-align: center;
+            }
+            
+            .confirmation-header {
+                background: linear-gradient(135deg, #1a5f7a, #57c5b6);
+                color: white;
+                padding: 1rem;
+                border-radius: 10px 10px 0 0;
+                margin: -2rem -2rem 1.5rem -2rem;
+            }
+            
+            .confirmation-header i {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .confirmation-header h3 {
+                margin: 0;
+                color: white;
+            }
+            
+            .confirmation-body {
+                padding: 1rem 0;
+            }
+            
+            .confirmation-details {
+                background: #f8f9fa;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+                text-align: left;
+            }
+            
+            .confirmation-details p {
+                margin: 0.5rem 0;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .confirmation-details i {
+                color: #57c5b6;
+                width: 20px;
+            }
+            
+            .confirmation-reference {
+                background: #e0f7fa;
+                padding: 0.8rem;
+                border-radius: 5px;
+                margin: 1rem 0;
+                font-weight: bold;
+                color: #1a5f7a;
+            }
+            
+            .confirmation-note {
+                font-style: italic;
+                color: #666;
+                font-size: 0.9rem;
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px dashed #ddd;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .confirmation-footer {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                margin-top: 1.5rem;
+            }
+            
+            .btn-fermer, .btn-imprimer {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s;
+            }
+            
+            .btn-fermer {
+                background: #ff6b6b;
+                color: white;
+            }
+            
+            .btn-fermer:hover {
+                background: #ff5252;
+            }
+            
+            .btn-imprimer {
+                background: #1a5f7a;
+                color: white;
+            }
+            
+            .btn-imprimer:hover {
+                background: #57c5b6;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translate(-50%, -60%);
+                }
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, -50%);
+                }
+            }
+            
+            /* Overlay pour la modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+            
+            .modal-overlay.active {
+                display: block;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Ajouter l'overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay active';
+        overlay.onclick = fermerConfirmation;
+        document.body.appendChild(overlay);
+    }
+}
+
+// Modifier la fonction fermerConfirmation pour gérer l'overlay
+function fermerConfirmation() {
+    const confirmationDiv = document.getElementById('confirmationInscription');
+    const overlay = document.querySelector('.modal-overlay');
+    
+    if (confirmationDiv) {
+        confirmationDiv.style.display = 'none';
+    }
+    
+    if (overlay) {
+        overlay.remove();
+    }
+    
+    // Réinitialiser le formulaire APRÈS fermeture
+    setTimeout(() => {
+        formInscription.reset();
+        console.log('✅ Formulaire réinitialisé après fermeture de la confirmation');
+    }, 500);
+}
     
     // Récupérer toutes les données
     const formData = {
